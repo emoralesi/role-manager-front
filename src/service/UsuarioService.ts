@@ -1,0 +1,111 @@
+import { getUserLogged, UserLogged } from "@/utils/localStorage";
+
+export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario: string, password: string }): Promise<any> {
+
+    let req = {
+        "nombreUsuario": nombreUsuario,
+        "password": password
+    }
+
+    try {
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(req)
+
+        };
+
+        const response = await fetch(`http://localhost:3500/service/loginUser`, requestOptions);
+
+        const data = await response.json();
+
+        return data
+
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function RegisterUsuario({ nombreUsuario, password, role }: { nombreUsuario: string, password: string, role: number }): Promise<any> {
+    try {
+
+        let req = {
+            "nombreUsuario": nombreUsuario,
+            "password": password,
+            "role": role
+        }
+
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(req)
+
+        };
+
+        const response = await fetch(`http://localhost:3500/service/registerUser`, requestOptions);
+
+        const data = await response.json();
+
+        return data
+
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+export async function getUsuarios(): Promise<any> {
+
+    try {
+        const response = await fetch(`http://localhost:3500/service/obtenerUsuarios`);
+
+        const data = await response.json();
+
+        return data
+
+    } catch (error) {
+        throw error
+    }
+
+}
+
+export async function UpdateEstadoUsuario({ id_usuario, activo }: { id_usuario: number, activo: boolean }): Promise<any> {
+    try {
+
+        let req = {
+            "id_usuario": id_usuario,
+            "activo": activo
+        }
+        const userLogged: UserLogged | null = getUserLogged();
+        if (!userLogged) throw new Error('Usuario no logueado');
+
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "tu_clave_secreta_jwt": userLogged.token
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(req)
+
+        };
+
+        const response = await fetch(`http://localhost:3500/service/actualizarUsuarioEstado`, requestOptions);
+
+        const data = await response.json();
+
+        return data
+
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+export default { LoginUsuario, RegisterUsuario, UpdateEstadoUsuario }
