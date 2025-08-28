@@ -1,14 +1,20 @@
+import { getUserLogged, UserLogged } from "@/utils/localStorage";
+
 export async function getMenuYSubMenu({ idUsuario }: { idUsuario: number }): Promise<any> {
 
     try {
         let req = {
             idUsuario: idUsuario
         }
+
+        const userLogged: UserLogged | null = getUserLogged();
+        if (!userLogged) throw new Error('Usuario no logueado');
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "tu_clave_secreta_jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTY5NTgzMTY1MSwiZXhwIjoxNjk1ODMyMjUxfQ.FVrdi0gdlQeZynte6D838cf9xuM2S7iVXjQqSfTzaE8"
+                "tu_clave_secreta_jwt": userLogged.token
             },
             body: JSON.stringify(req)
 
@@ -18,7 +24,7 @@ export async function getMenuYSubMenu({ idUsuario }: { idUsuario: number }): Pro
         );
 
         const data = await response.json();
-        
+
         return data
 
     } catch (error) {
