@@ -1,6 +1,8 @@
+import { Menu } from "@/types/Menu";
+import { ServiceResponse } from "@/types/ServiceResponse";
 import { getUserLogged, UserLogged } from "@/utils/localStorage";
 
-export async function getMenuYSubMenu({ idUsuario }: { idUsuario: number }): Promise<any> {
+export async function getMenuYSubMenu({ idUsuario }: { idUsuario: number }): Promise<ServiceResponse<Menu[]>> {
 
     try {
         let req = {
