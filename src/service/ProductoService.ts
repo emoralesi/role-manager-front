@@ -1,19 +1,5 @@
 import { getUserLogged, UserLogged } from "@/utils/localStorage";
 
-interface FiltroCBSSCA {
-    id_rel_sub_categoria_filtro: number;
-    value: string;
-}
-
-interface InsertarProductoParams {
-    categoria: number;
-    nombreProducto: string;
-    precio: number;
-    sku: string;
-    stock: number;
-    filtroCategoriasBySubSubCategoriaAll: FiltroCBSSCA[];
-}
-
 export async function insertarProducto({
     categoria,
     nombreProducto,
@@ -142,13 +128,6 @@ export async function AgregarStock({ sku, stock }: { sku: string, stock: number 
 
 }
 
-interface UpdateProductoParams {
-    id_producto: number;
-    id_categoria: number;
-    nombre: string;
-    precio: number;
-    sku: string;
-}
 
 export async function UpdateProducto({
     id_producto,

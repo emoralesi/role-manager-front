@@ -3,6 +3,7 @@ import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 import SideMenu from "./componentes/SideMenu/SideMenu";
 import { Box, Paper } from "@mui/material";
+import { Providers } from "./componentes/SnackProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,6 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <Providers>
       <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ margin: 0, padding: 0 }}>
         <Box
           sx={{
@@ -40,7 +42,7 @@ export default function RootLayout({
           <Box
             sx={{
               marginBottom: 0,
-              width: '100%',
+              width: { xs: "calc(100% - 70px)", md: "calc(100% - 200px)" },
               display: "flex",
               flexDirection: "column",
               height: "100vh",
@@ -55,6 +57,7 @@ export default function RootLayout({
           </Box>
         </Box>
       </body>
+      </Providers>
     </html>
   );
 }
