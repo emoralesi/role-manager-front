@@ -1,4 +1,6 @@
-export async function getRoles(): Promise<any> {
+import { ServiceResponse } from "@/types/ServiceResponse";
+
+export async function getRoles(): Promise<ServiceResponse<Role[]>> {
 
     try {
         const response = await fetch(`http://localhost:3500/service/obtenerRoles`)

@@ -11,16 +11,6 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 
-// Definición de la interfaz Producto
-interface Producto {
-  id_producto: number;
-  nombre: string;
-  precio: number;
-  sku: string;
-  isactive: boolean;
-  stock: number;
-}
-
 export default function ConsultaStockPage() {
   const { 
     obtenerProductos, 
@@ -44,7 +34,6 @@ export default function ConsultaStockPage() {
     obtenerProductos();
   }, []);
 
-  // Filtros
   const FilterN = (valor: string) => {
     setListaProductoDataGrid(
       listaProducto.filter(

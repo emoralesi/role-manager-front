@@ -1,3 +1,4 @@
+import { ServiceResponse } from "@/types/ServiceResponse";
 import { getUserLogged, UserLogged } from "@/utils/localStorage";
 
 export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario: string, password: string }): Promise<any> {
@@ -60,7 +61,7 @@ export async function RegisterUsuario({ nombreUsuario, password, role }: { nombr
     }
 }
 
-export async function getUsuarios(): Promise<any> {
+export async function getUsuarios(): Promise<ServiceResponse<Usuario[]>> {
 
     try {
         const response = await fetch(`http://localhost:3500/service/obtenerUsuarios`);
@@ -72,7 +73,6 @@ export async function getUsuarios(): Promise<any> {
     } catch (error) {
         throw error
     }
-
 }
 
 export async function UpdateEstadoUsuario({ id_usuario, activo }: { id_usuario: number, activo: boolean }): Promise<any> {
@@ -102,6 +102,65 @@ export async function UpdateEstadoUsuario({ id_usuario, activo }: { id_usuario: 
 
         return data
 
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+export async function UpdateUsuario({ id_usuario, nombre_usuario, role }: { id_usuario: number, nombre_usuario: string, role: number }): Promise<any> {
+    try {
+        let req = {
+            "id_usuario": id_usuario,
+            "nombre_usuario": nombre_usuario,
+            "role": role,
+        }
+        const userLogged: UserLogged | null = getUserLogged();
+        if (!userLogged) throw new Error('Usuario no logueado');
+
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "tu_clave_secreta_jwt": userLogged.token
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(req)
+
+        };
+
+        const response = await fetch(`http://localhost:3500/service/actualizarUsuario`, requestOptions);
+
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+export async function UpdatePasswordUsuario({ id_usuario, newPassword }: { id_usuario: number, newPassword: string }): Promise<any> {
+    try {
+        let req = {
+            "id_usuario": id_usuario,
+            "newPassword": newPassword,
+        }
+        const userLogged: UserLogged | null = getUserLogged();
+        if (!userLogged) throw new Error('Usuario no logueado');
+        
+        const requestOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "tu_clave_secreta_jwt": userLogged.token
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify(req)
+        };
+        const response = await fetch(`http://localhost:3500/service/actualizarPasswordUsuario`, requestOptions);
+        const data = await response.json();
+        return data
     } catch (error) {
         console.log(error);
         throw error

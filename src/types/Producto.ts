@@ -35,7 +35,7 @@ interface ListaProducto {
     nombresubcategoria: string;
     nombresubsubcategoria: string;
     nombre: string;
-    precio: string;
+    precio: number;
     sku: string;
     isactive: boolean;
     stock: number;
