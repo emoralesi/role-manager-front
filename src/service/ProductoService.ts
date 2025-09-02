@@ -1,7 +1,6 @@
 import { getUserLogged, UserLogged } from "@/utils/localStorage";
 
 export async function insertarProducto({
-    categoria,
     nombreProducto,
     precio,
     sku,
@@ -11,7 +10,6 @@ export async function insertarProducto({
     try {
 
         let req = {
-            "id_categoria": categoria,
             "nombre": nombreProducto,
             "precio": precio,
             "sku": sku,

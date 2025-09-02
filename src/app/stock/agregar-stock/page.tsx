@@ -1,7 +1,7 @@
 'use client'
 
 import { useProducto } from "@/hooks/useProducto";
-import { Box, Button, Divider, TextField, Typography, Paper, Grid } from "@mui/material";
+import { Box, Button, Divider, TextField, Typography, Paper, Grid, Card, CardContent } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
@@ -33,18 +33,18 @@ export default function AgregarStockPage() {
       setSkuResultado('');
       setStockResultado(0);
     }
-  }
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!skuResultado) {
-      enqueueSnackbar('Debe ingresar un SKU que exista para realizar la acción', { variant: 'warning', anchorOrigin: { vertical: 'bottom', horizontal: 'right' } });
+      enqueueSnackbar('Debe ingresar un SKU que exista para realizar la acción', { variant: 'warning' });
       return;
     }
 
     if (Number(stock) <= 0) {
-      enqueueSnackbar('Debe ingresar un valor de STOCK mayor a 0', { variant: 'warning', anchorOrigin: { vertical: 'bottom', horizontal: 'right' } });
+      enqueueSnackbar('Debe ingresar un valor de STOCK mayor a 0', { variant: 'warning' });
       return;
     }
 
@@ -52,18 +52,21 @@ export default function AgregarStockPage() {
     const res = await agregarStock(schema);
 
     if (res.ok === 200) {
-      enqueueSnackbar('Stock actualizado correctamente', { variant: 'success', anchorOrigin: { vertical: 'bottom', horizontal: 'right' } });
+      enqueueSnackbar('Stock actualizado correctamente', { variant: 'success' });
       setStock('0');
       await obtenerProductos();
     } else {
-      enqueueSnackbar('Ha ocurrido un error inesperado', { variant: 'error', anchorOrigin: { vertical: 'bottom', horizontal: 'right' } });
+      enqueueSnackbar('Ha ocurrido un error inesperado', { variant: 'error' });
     }
   }
 
   return (
-    <Box p={2}>
-      <Typography variant="h5" fontWeight="bold" gutterBottom>Agregar Stock</Typography>
-      <Paper elevation={3} sx={{ p: 3 }}>
+    <Box p={2} sx={{ minHeight: '100vh', bgcolor: '#f9f9f9' }}>
+      <Card sx={{ maxWidth: 900, mx: 'auto', p: 2, boxShadow: 3 }}>
+        <Typography variant="h4" mb={3} fontWeight={600} textAlign={"center"}>
+          Agregar Stock
+        </Typography>
+
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
@@ -118,12 +121,15 @@ export default function AgregarStockPage() {
                 onChange={(e) => setStock(e.target.value)}
               />
             </Grid>
-            <Grid size={{ xs: 6, sm: 12 }} sx={{ mt: 2 }}>
-              <Button type="submit" variant="contained" color="success">Agregar Stock</Button>
+
+            <Grid size={{ xs: 12 }} sx={{ mt: 2, textAlign: 'center' }}>
+              <Button type="submit" variant="contained" color="success" sx={{ px: 4, py: 1.5 }}>
+                Agregar Stock
+              </Button>
             </Grid>
           </Grid>
         </form>
-      </Paper>
+      </Card>
     </Box>
   );
 }

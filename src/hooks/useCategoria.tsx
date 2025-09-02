@@ -9,7 +9,7 @@ function transformarCategorias(datos: CategoriaPlano[]): Categoria[] {
     datos.forEach((item) => {
         if (!mapaCategorias.has(item.id_categoria)) {
             mapaCategorias.set(item.id_categoria, {
-                id: item.id_categoria,
+                id_categoria: item.id_categoria,
                 nombre: item.nombre,
                 subCategorias: [],
             });
@@ -17,19 +17,19 @@ function transformarCategorias(datos: CategoriaPlano[]): Categoria[] {
 
         const categoria = mapaCategorias.get(item.id_categoria)!;
 
-        let subCat = categoria?.subCategorias?.find((sc) => sc.id === item.id_sub_categoria);
+        let subCat = categoria?.subCategorias?.find((sc) => sc.id_sub_categoria === item.id_sub_categoria);
         if (!subCat) {
             subCat = {
-                id: item.id_sub_categoria,
-                nombre: item.nombre_sub_categoria,
+                id_sub_categoria: item.id_sub_categoria,
+                nombre_sub_categoria: item.nombre_sub_categoria,
                 subSubCategorias: [],
             };
             categoria?.subCategorias?.push(subCat);
         }
 
         subCat?.subSubCategorias?.push({
-            id: item.id_sub_sub_categoria,
-            nombre: item.nombre_sub_sub_categoria,
+            id_sub_sub_categoria: item.id_sub_sub_categoria,
+            nombre_sub_sub_categoria: item.nombre_sub_sub_categoria,
         });
     });
 

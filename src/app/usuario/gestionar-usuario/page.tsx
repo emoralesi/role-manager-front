@@ -5,7 +5,8 @@ import {
   Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
   FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select,
   Stack, TextField, Typography, Paper,
-  SelectChangeEvent
+  SelectChangeEvent,
+  Card
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import { enqueueSnackbar } from "notistack";
@@ -164,9 +165,9 @@ export default function GestionarUsuarioPage() {
   }, []);
 
   return (
-    <Box sx={{ width: "100%", minHeight: "100vh", bgcolor: "#f4f6f8" }}>
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h4" mb={3} fontWeight={600}>
+    <Box p={2} sx={{ minHeight: '100vh', bgcolor: '#f9f9f9' }}>
+      <Card sx={{ maxWidth: 900, mx: 'auto', p: 2, boxShadow: 3 }}>
+        <Typography variant="h4" mb={3} fontWeight={600} textAlign={"center"}>
           Gestionar Usuario
         </Typography>
 
@@ -205,7 +206,6 @@ export default function GestionarUsuarioPage() {
             />
           </Stack>
         </Paper>
-
         <Box
           sx={{
             width: "100%",
@@ -223,10 +223,7 @@ export default function GestionarUsuarioPage() {
             initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
           />
         </Box>
-      </Box>
-
-
-
+      </Card>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Editar Usuario</DialogTitle>
         <DialogContent>

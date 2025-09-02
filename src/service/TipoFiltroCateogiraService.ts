@@ -1,4 +1,6 @@
-export async function getTipoFiltroCategoria(): Promise<any> {
+import { ServiceResponse } from "@/types/ServiceResponse";
+
+export async function getTipoFiltroCategoria(): Promise<ServiceResponse<TipoFiltro[]>> {
 
     try {
         const response = await fetch(`http://localhost:3500/service/obtenerTipoFiltroCategoria`)

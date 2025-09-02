@@ -1,10 +1,16 @@
 interface FiltroCBSSCA {
     id_rel_sub_categoria_filtro: number;
-    value: string;
+    id_filtro_categoria: number;
+    id_sub_categoria: number;
+    id_sub_sub_categoria: number;
+    id_tipo_filtro_categoria: number;
+    nombre_filtro_categoria: string;
+    nombre_sub_sub_categoria: string;
+    nombre_tipo_filtro_categoria: 'TEXTO' | 'CHECK' | 'NUMERICO';
+    value?: string | number | boolean;
 }
 
 interface InsertarProductoParams {
-    categoria: number;
     nombreProducto: string;
     precio: number;
     sku: string;

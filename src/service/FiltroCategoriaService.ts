@@ -1,3 +1,5 @@
+import { ServiceResponse } from "@/types/ServiceResponse";
+
 export async function getFiltroCategorias(): Promise<any> {
 
     try {
@@ -15,7 +17,7 @@ export async function getFiltroCategorias(): Promise<any> {
 
 export async function getFiltroCategoriasBySubSubCategoria(
     { id_sub_sub_categoria }: { id_sub_sub_categoria: number }
-): Promise<any> {
+): Promise<ServiceResponse<FiltroCBSSCA[]>> {
 
     const req = {
         idSubSubCategoria: id_sub_sub_categoria
