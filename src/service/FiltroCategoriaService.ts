@@ -1,10 +1,22 @@
+'use server'
 import { ServiceResponse } from "@/types/ServiceResponse";
+import { cookies } from "next/headers";
 
 export async function getFiltroCategorias(): Promise<any> {
 
     try {
-        const response = await fetch(`http://localhost:3500/service/obtenerFiltroCategoria`);
 
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+        const session = JSON.parse(cookieValue);
+
+        const response = await fetch(`http://localhost:3500/service/obtenerFiltroCategoria`, {
+            method: "GET",
+            headers: {
+                "tu_clave_secreta_jwt": session.token,
+            },
+        });
+        
         const data = await response.json();
 
         return data
@@ -24,10 +36,17 @@ export async function getFiltroCategoriasBySubSubCategoria(
     };
 
     try {
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "tu_clave_secreta_jwt": session.token,
             },
             body: JSON.stringify(req),
         };
@@ -46,5 +65,3 @@ export async function getFiltroCategoriasBySubSubCategoria(
         throw error;
     }
 }
-
-export default { getFiltroCategorias }

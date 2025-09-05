@@ -1,27 +1,20 @@
+import { useAuthContext } from "@/context/AuhtContext";
 import { getFiltroCategorias, getFiltroCategoriasBySubSubCategoria } from "@/service/FiltroCategoriaService";
 import { Filtro } from "@/types/Categoria";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export const useFiltroCategoria = () => {
+
+    const { handleLogOut } = useAuthContext();
 
     const [FiltroCategoriasAll, setFiltroCategoriasAll] = useState<Filtro[]>([])
     const [filtroCategoriasBySubSubCategoriaAll, setFiltroCategoriasBySubSubCategoriaAll] = useState<FiltroCBSSCA[]>([])
 
-    const navigate = useRouter();
-
-    const handleLogOut = async () => {
-        await localStorage.removeItem('UserLogged');
-        navigate.push('/login')
-    };
 
     const obtenerFiltroCategorias = async () => {
         try {
             const data = await getFiltroCategorias()
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             setFiltroCategoriasAll(data.resultado)
         } catch (er) {
@@ -34,10 +27,7 @@ export const useFiltroCategoria = () => {
         try {
 
             const data = await getFiltroCategoriasBySubSubCategoria({ id_sub_sub_categoria })
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             let dataResultado = data.resultado
 

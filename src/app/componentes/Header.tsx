@@ -1,4 +1,4 @@
-import { getUserLogged, UserLogged } from '@/utils/localStorage';
+import { useAuthContext } from '@/context/AuhtContext';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Box, IconButton } from '@mui/material';
 import Fade from '@mui/material/Fade';
@@ -9,6 +9,8 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 export default function Header() {
+
+  const { handleLogOut } = useAuthContext();
   const [anchorEl, setAnchorEl] = useState(null);
   const [userStorage, setUserStorage] = useState<string>('')
   const open = Boolean(anchorEl);
@@ -16,14 +18,21 @@ export default function Header() {
   const navigate = useRouter();
 
   useEffect(() => {
-    const userLogged: UserLogged | null = getUserLogged();
-    setUserStorage(userLogged?.nombreUsuario || 'Invitado');
-  }, [])
+    const fetchSession = async () => {
+      try {
+        const res = await fetch("/api/session");
+        if (res.ok) {
+          const data = await res.json();
+          setUserStorage(data.session.nombreUsuario || "Invitado");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const handleLogOut = async () => {
-    await localStorage.removeItem('UserLogged');
-    navigate.push('/login')
-  };
+    fetchSession();
+  }, []);
+
 
   const handleClick = (event: any) => {
     event.preventDefault();

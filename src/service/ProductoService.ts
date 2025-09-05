@@ -1,4 +1,5 @@
-import { getUserLogged, UserLogged } from "@/utils/localStorage";
+'use server'
+import { cookies } from "next/headers";
 
 export async function insertarProducto({
     nombreProducto,
@@ -8,6 +9,11 @@ export async function insertarProducto({
     filtroCategoriasBySubSubCategoriaAll
 }: InsertarProductoParams): Promise<any> {
     try {
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
 
         let req = {
             "nombre": nombreProducto,
@@ -21,6 +27,7 @@ export async function insertarProducto({
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
+                "tu_clave_secreta_jwt": session.token,
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(req)
@@ -42,14 +49,17 @@ export async function insertarProducto({
 export async function getProductos(): Promise<any> {
 
     try {
-        const userLogged: UserLogged | null = getUserLogged();
-        if (!userLogged) throw new Error('Usuario no logueado');
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
 
         const requestOptions: RequestInit = {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                'tu_clave_secreta_jwt': userLogged.token,
+                'tu_clave_secreta_jwt': session.token,
             },
         };
 
@@ -72,11 +82,18 @@ export async function updateIsActive({ id_producto, isactive }: { id_producto: n
     }
 
     try {
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 // 'Content-Type': 'application/x-www-form-urlencoded',
+                'tu_clave_secreta_jwt': session.token,
             },
             body: JSON.stringify(req)
 
@@ -102,11 +119,18 @@ export async function AgregarStock({ sku, stock }: { sku: string, stock: number 
     }
 
     try {
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 // 'Content-Type': 'application/x-www-form-urlencoded',
+                'tu_clave_secreta_jwt': session.token,
             },
             body: JSON.stringify(req)
 
@@ -145,11 +169,18 @@ export async function UpdateProducto({
     }
 
     try {
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 // 'Content-Type': 'application/x-www-form-urlencoded',
+                'tu_clave_secreta_jwt': session.token,
             },
             body: JSON.stringify(req)
 
@@ -166,5 +197,3 @@ export async function UpdateProducto({
         throw error
     }
 }
-
-export default { insertarProducto, getProductos, updateIsActive, UpdateProducto, AgregarStock }

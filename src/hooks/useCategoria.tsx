@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Categoria, CategoriaPlano, InsertarCategoriasParams } from "@/types/Categoria";
+import { useAuthContext } from "@/context/AuhtContext";
 import { getCategorias, getTodoCategorias, insertarCategorias } from "@/service/CategoriaService";
+import { Categoria, CategoriaPlano, InsertarCategoriasParams } from "@/types/Categoria";
+import { useState } from "react";
 
 function transformarCategorias(datos: CategoriaPlano[]): Categoria[] {
     const mapaCategorias = new Map<number, Categoria>();
@@ -37,19 +37,15 @@ function transformarCategorias(datos: CategoriaPlano[]): Categoria[] {
 }
 
 export const useCategoria = () => {
+
+    const { handleLogOut } = useAuthContext();
+
     const [categoriasAll, setCategoriasAll] = useState<Categoria[]>([]);
     const [categoriasTodoAll, setCategoriasTodoAll] = useState<Categoria[]>([]);
     const [categoriasTodoAllGrid, setCategoriasTodoAllGrid] = useState<Categoria[]>([]);
     const [loadingCategorias, setLoadingCategorias] = useState(false);
     const [errorCategoria, setError] = useState<boolean | null>(null);
     const [statusCategoria, setStatusCategoria] = useState<number>(0);
-
-    const router = useRouter();
-
-    const handleLogOut = async () => {
-        await localStorage.removeItem("UserLogged");
-        router.push("/login");
-    };
 
     const obtenerCategorias = async () => {
         try {

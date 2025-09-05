@@ -128,7 +128,7 @@ export default function HabilitarDeshabilitarPrPage() {
 
   useEffect(() => {
     obtenerProductos();
-  }, [obtenerProductos]);
+  }, []);
 
   return (
     <Box p={2} sx={{ minHeight: '100vh', bgcolor: '#f9f9f9' }}>

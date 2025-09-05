@@ -1,18 +1,14 @@
+import { useAuthContext } from "@/context/AuhtContext"
 import { getSubCategorias } from "@/service/SubCategoriaService"
 import { SubCategoria } from "@/types/Categoria"
-import { useRouter } from "next/navigation"
-import { useContext, useState } from "react"
+import { useState } from "react"
 
 export const useSubCategoria = () => {
 
+    const { handleLogOut } = useAuthContext();
+
     const [subCategoriasAll, setSubCategoriasAll] = useState<SubCategoria[]>([])
 
-    const navigate = useRouter();
-
-    const handleLogOut = async () => {
-        await localStorage.removeItem('UserLogged');
-        navigate.push('/login')
-    };
 
     const cleanSubcategorias = () => {
         setSubCategoriasAll([])
@@ -23,10 +19,7 @@ export const useSubCategoria = () => {
         try {
 
             const data = await getSubCategorias({ id_categoria })
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             setSubCategoriasAll(data.resultado)
         } catch (er) {

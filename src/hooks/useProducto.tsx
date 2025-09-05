@@ -1,8 +1,10 @@
+import { useAuthContext } from '@/context/AuhtContext';
 import { AgregarStock, getProductos, insertarProducto, updateIsActive, UpdateProducto } from '@/service/ProductoService';
-import { useRouter } from "next/navigation";
 import { useState } from 'react';
 
 export const useProducto = () => {
+
+    const { handleLogOut } = useAuthContext();
 
     const [loadingProducto, setLoadingProducto] = useState<boolean>(false);
     const [listaProducto, setListaProducto] = useState<ListaProducto[]>([])
@@ -11,21 +13,11 @@ export const useProducto = () => {
     const [stautsProducto, setStatusProducto] = useState<number>(0);
 
 
-    const navigate = useRouter();
-
-    const handleLogOut = async () => {
-        await localStorage.removeItem('UserLogged');
-        navigate.push('/login')
-    };
-
     const agregarProducto = async (params: InsertarProductoParams) => {
 
         try {
             const result = await insertarProducto(params)
-
-            if (result.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (result.status === "Forbidden") return handleLogOut();
             return result;
 
         } catch (error) {
@@ -40,10 +32,7 @@ export const useProducto = () => {
         try {
 
             const result = await UpdateProducto(params)
-
-            if (result.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (result.status === "Forbidden") return handleLogOut();
             return result
 
         } catch (error) {
@@ -57,10 +46,7 @@ export const useProducto = () => {
         try {
 
             const data = await updateIsActive({ id_producto, isactive });
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             return data
         } catch (er) {
@@ -72,10 +58,7 @@ export const useProducto = () => {
         try {
 
             const data = await getProductos();
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             setListaProducto(data.resultado)
             setListaProductoDataGrid(data.resultado)
@@ -90,10 +73,7 @@ export const useProducto = () => {
         try {
 
             const data = await AgregarStock({ sku, stock });
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
             setStatusProducto(data.ok);
 
             return data;

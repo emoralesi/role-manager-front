@@ -1,5 +1,5 @@
-import { ServiceResponse } from "@/types/ServiceResponse";
-import { getUserLogged, UserLogged } from "@/utils/localStorage";
+'use server'
+import { cookies } from "next/headers";
 
 
 export async function crearRolService({
@@ -12,10 +12,16 @@ export async function crearRolService({
   try {
     const req = { nombreRol, menus };
 
+    const cookieValue = (await cookies()).get("session")?.value;
+    if (!cookieValue) throw new Error("Usuario no logueado");
+
+    const session = JSON.parse(cookieValue);
+
     const requestOptions: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "tu_clave_secreta_jwt": session.token,
       },
       body: JSON.stringify(req),
     };
@@ -33,14 +39,16 @@ export async function crearRolService({
 
 export async function getRoles(): Promise<any> {
   try {
-    const userLogged: UserLogged | null = getUserLogged();
-    if (!userLogged) throw new Error("Usuario no logueado");
+    const cookieValue = (await cookies()).get("session")?.value;
+    if (!cookieValue) throw new Error("Usuario no logueado");
+
+    const session = JSON.parse(cookieValue);
 
     const requestOptions: RequestInit = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "tu_clave_secreta_jwt": userLogged.token,
+        "tu_clave_secreta_jwt": session.token,
       },
     };
 
@@ -57,14 +65,16 @@ export async function getRoles(): Promise<any> {
 
 export async function getRolesConMenus(): Promise<any> {
   try {
-    const userLogged: UserLogged | null = getUserLogged();
-    if (!userLogged) throw new Error("Usuario no logueado");
+    const cookieValue = (await cookies()).get("session")?.value;
+    if (!cookieValue) throw new Error("Usuario no logueado");
+
+    const session = JSON.parse(cookieValue);
 
     const requestOptions: RequestInit = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "tu_clave_secreta_jwt": userLogged.token,
+        "tu_clave_secreta_jwt": session.token,
       },
     };
 
@@ -92,10 +102,16 @@ export async function actualizarRol({
   try {
     const req = { idRol, nombreRol, menus };
 
+    const cookieValue = (await cookies()).get("session")?.value;
+    if (!cookieValue) throw new Error("Usuario no logueado");
+
+    const session = JSON.parse(cookieValue);
+
     const requestOptions: RequestInit = {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "tu_clave_secreta_jwt": session.token,
       },
       body: JSON.stringify(req),
     };
@@ -110,5 +126,3 @@ export async function actualizarRol({
     return error;
   }
 }
-
-export default { getRoles, crearRolService, getRolesConMenus, actualizarRol };

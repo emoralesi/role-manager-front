@@ -1,5 +1,6 @@
+'use server'
 import { ServiceResponse } from "@/types/ServiceResponse";
-import { getUserLogged, UserLogged } from "@/utils/localStorage";
+import { cookies } from "next/headers";
 
 export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario: string, password: string }): Promise<any> {
 
@@ -9,6 +10,7 @@ export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario:
     }
 
     try {
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
@@ -39,11 +41,17 @@ export async function RegisterUsuario({ nombreUsuario, password, role }: { nombr
             "role": role
         }
 
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 // 'Content-Type': 'application/x-www-form-urlencoded',
+                'tu_clave_secreta_jwt': session.token,
             },
             body: JSON.stringify(req)
 
@@ -64,7 +72,18 @@ export async function RegisterUsuario({ nombreUsuario, password, role }: { nombr
 export async function getUsuarios(): Promise<ServiceResponse<Usuario[]>> {
 
     try {
-        const response = await fetch(`http://localhost:3500/service/obtenerUsuarios`);
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+        const session = JSON.parse(cookieValue);
+
+        const response = await fetch(`http://localhost:3500/service/obtenerUsuarios`, {
+            method: "GET",
+            headers: {
+                "tu_clave_secreta_jwt": session.token,
+            },
+        });
+
 
         const data = await response.json();
 
@@ -82,14 +101,17 @@ export async function UpdateEstadoUsuario({ id_usuario, activo }: { id_usuario: 
             "id_usuario": id_usuario,
             "activo": activo
         }
-        const userLogged: UserLogged | null = getUserLogged();
-        if (!userLogged) throw new Error('Usuario no logueado');
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
 
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "tu_clave_secreta_jwt": userLogged.token
+                "tu_clave_secreta_jwt": session.token
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(req)
@@ -115,14 +137,17 @@ export async function UpdateUsuario({ id_usuario, nombre_usuario, role }: { id_u
             "nombre_usuario": nombre_usuario,
             "role": role,
         }
-        const userLogged: UserLogged | null = getUserLogged();
-        if (!userLogged) throw new Error('Usuario no logueado');
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
 
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "tu_clave_secreta_jwt": userLogged.token
+                "tu_clave_secreta_jwt": session.token
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(req)
@@ -146,14 +171,17 @@ export async function UpdatePasswordUsuario({ id_usuario, newPassword }: { id_us
             "id_usuario": id_usuario,
             "newPassword": newPassword,
         }
-        const userLogged: UserLogged | null = getUserLogged();
-        if (!userLogged) throw new Error('Usuario no logueado');
-        
+
+        const cookieValue = (await cookies()).get("session")?.value;
+        if (!cookieValue) throw new Error("Usuario no logueado");
+
+        const session = JSON.parse(cookieValue);
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "tu_clave_secreta_jwt": userLogged.token
+                "tu_clave_secreta_jwt": session.token
                 // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify(req)
@@ -166,5 +194,3 @@ export async function UpdatePasswordUsuario({ id_usuario, newPassword }: { id_us
         throw error
     }
 }
-
-export default { LoginUsuario, RegisterUsuario, UpdateEstadoUsuario }

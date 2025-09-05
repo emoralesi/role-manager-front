@@ -1,28 +1,20 @@
+import { useAuthContext } from "@/context/AuhtContext";
 import { getUsuarios, RegisterUsuario, UpdateEstadoUsuario, UpdatePasswordUsuario, UpdateUsuario } from "@/service/UsuarioService";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 export const useUsuario = () => {
 
+    const { handleLogOut } = useAuthContext();
+
     const [usuariosAll, setUsuariosAll] = useState<Usuario[]>([]);
     const [usuariosAllDataGrid, setUsuariosAllDataGrid] = useState<Usuario[]>([]);
-
-    const navigate = useRouter();
-
-    const handleLogOut = async () => {
-        await localStorage.removeItem('UserLogged');
-        navigate.push('/login')
-    };
 
     const RegistarUsuario = async ({ nombreUsuario, password, role }: { nombreUsuario: string, password: string, role: number }) => {
 
         try {
 
             const result = await RegisterUsuario({ nombreUsuario, password, role });
-
-            if (result.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (result.status === "Forbidden") return handleLogOut();
             return result;
 
         } catch (error) {
@@ -36,10 +28,7 @@ export const useUsuario = () => {
     const actualizarPassword = async (id_usuario: number, newPassword: string) => {
         try {
             const result = await UpdatePasswordUsuario({ id_usuario, newPassword });
-
-            if (result.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (result.status === "Forbidden") return handleLogOut();
 
             return result
         } catch (error) {
@@ -51,10 +40,7 @@ export const useUsuario = () => {
         try {
 
             const data = await UpdateUsuario({ id_usuario, nombre_usuario, role })
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             return data
         } catch (er) {
@@ -66,10 +52,7 @@ export const useUsuario = () => {
         try {
 
             const data = await getUsuarios()
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             const usuarios: Usuario[] = data.resultado.map((u: any) => ({
                 id_usuario: u.id_usuario,
@@ -94,10 +77,7 @@ export const useUsuario = () => {
         try {
 
             const data = await UpdateEstadoUsuario({ id_usuario, activo })
-
-            if (data.status == "Forbidden") {
-                handleLogOut()
-            }
+            if (data.status === "Forbidden") return handleLogOut();
 
             return data
         } catch (er) {

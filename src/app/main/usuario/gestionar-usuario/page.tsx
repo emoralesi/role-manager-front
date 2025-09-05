@@ -1,19 +1,22 @@
 'use client'
+import { useAuth } from "@/hooks/useAuth";
 import { useRoles } from "@/hooks/useRoles";
 import { useUsuario } from "@/hooks/useUsuario";
+import EditIcon from "@mui/icons-material/Edit";
+import FlakyIcon from "@mui/icons-material/Flaky";
 import {
-  Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
-  FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select,
-  Stack, TextField, Typography, Paper,
+  Box, Button,
+  Card,
+  Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
+  FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput,
+  Paper,
+  Select,
   SelectChangeEvent,
-  Card
+  Stack, TextField, Typography
 } from "@mui/material";
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
 import { enqueueSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import FlakyIcon from "@mui/icons-material/Flaky";
-import EditIcon from "@mui/icons-material/Edit";
-import { UserLogged } from "@/utils/localStorage";
 
 export default function GestionarUsuarioPage() {
   const MenuProps = {
@@ -28,11 +31,10 @@ export default function GestionarUsuarioPage() {
   const [open, setOpen] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | null>(null);
   const [rol, setRol] = useState<number>(0);
+  const [idUser, setIdUser] = useState<number>(0);
 
   const { obtenerUsuarios, usuariosAll, setUsuariosAll, usuariosAllDataGrid, setUsuariosAllDataGrid, actualizarUsuarioEstado, actualizarUsuario, actualizarPassword } = useUsuario();
   const { obtenerRoles, rolesAll } = useRoles();
-
-  const userLogged: UserLogged | null = JSON.parse(localStorage.getItem('UserLogged') || 'null');
 
   const FilterNombreProducto = (valor: string) => {
     setUsuariosAllDataGrid(
@@ -96,7 +98,6 @@ export default function GestionarUsuarioPage() {
     FilterActivo(e.target.checked);
   };
 
-
   const handleOpen = (row: Usuario) => {
     setUsuarioSeleccionado(row);
     setNombreUsuario(row.nombre_usuario);
@@ -136,7 +137,8 @@ export default function GestionarUsuarioPage() {
         headerName: "Acciones",
         flex: 1,
         getActions: (params) => {
-          const isUserLogged = userLogged?.id_usuario === params.row.id_usuario;
+          console.log("mi ud User", idUser);
+         const isUserLogged = idUser === params.row.id_usuario || params.row.role?.nombre_rol === 'admin';
           return [
             <GridActionsCellItem
               icon={<FlakyIcon />}
@@ -156,10 +158,24 @@ export default function GestionarUsuarioPage() {
         },
       },
     ],
-    [UpdateStatus, userLogged]
+    [UpdateStatus, idUser]
   );
 
   useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const res = await fetch("/api/session");
+        if (res.ok) {
+          const data = await res.json();
+          setIdUser(data.session.id_usuario || 0);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchSession();
+
     obtenerRoles();
     obtenerUsuarios();
   }, []);

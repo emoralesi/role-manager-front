@@ -1,8 +1,14 @@
+"use client";
 
-export default function Home() {
-  return (
-    <div>
-      <h1>Inicial</h1>
-    </div>
-  );
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function HomeRedirect() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/login");
+  }, [router]);
+
+  return null;
 }

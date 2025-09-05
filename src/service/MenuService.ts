@@ -1,38 +1,40 @@
+'use server';
 import { Menu } from "@/types/Menu";
 import { ServiceResponse } from "@/types/ServiceResponse";
-import { getUserLogged, UserLogged } from "@/utils/localStorage";
+import { cookies } from "next/headers";
 
-export async function getMenuYSubMenu({ idUsuario }: { idUsuario: number }): Promise<ServiceResponse<Menu[]>> {
+export default async function getMenuYSubMenu(): Promise<ServiceResponse<Menu[]>> {
+  try {
+    const cookieValue = (await cookies()).get("session")?.value;
+    if (!cookieValue) throw new Error("Usuario no logueado");
 
-    try {
-        let req = {
-            idUsuario: idUsuario
-        }
+    const session = JSON.parse(cookieValue);
 
-        const userLogged: UserLogged | null = getUserLogged();
-        if (!userLogged) throw new Error('Usuario no logueado');
+    const reqBody = {
+      idUsuario: session.id_usuario
+    };
 
-        const requestOptions: RequestInit = {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                "tu_clave_secreta_jwt": userLogged.token
-            },
-            body: JSON.stringify(req)
+    const requestOptions: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "tu_clave_secreta_jwt": session.token,
+      },
+      body: JSON.stringify(reqBody),
+    };
 
-        };
-        const response = await fetch(`http://localhost:3500/service/obtenerMenuItems`,
-            requestOptions
-        );
+    const response = await fetch(
+      "http://localhost:3500/service/obtenerMenuItems",
+      requestOptions
+    );
 
-        const data = await response.json();
-
-        return data
-
-    } catch (error) {
-        throw error
+    if (!response.ok) {
+      throw new Error("Error al obtener menú");
     }
 
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
 }
-
-export default { getMenuYSubMenu };

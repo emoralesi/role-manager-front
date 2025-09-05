@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { actualizarRol, crearRolService, getRolesConMenus } from "@/service/RolesService";
 import { log } from "console";
+import { useAuthContext } from "@/context/AuhtContext";
 
 export interface Submenu {
     id_sub_menu: number;
@@ -21,14 +22,16 @@ export interface Rol {
 }
 
 export const useRoles = () => {
+
+    const { handleLogOut } = useAuthContext();
+
     const [rolesAll, setRolesAll] = useState<Rol[]>([]);
     const [menus, setMenus] = useState<Menu[]>([]);
 
     const obtenerRoles = useCallback(async () => {
         try {
             const data = await getRolesConMenus();
-
-            console.log("Datos obtenidos de getRolesConMenus:", data);
+            if (data.status === "Forbidden") return handleLogOut();
 
             if (data.ok === 200) {
                 const menuMap: { [id: number]: Menu } = {};
@@ -101,6 +104,7 @@ export const useRoles = () => {
             try {
                 const req = { nombreRol, menus: menusSeleccionados };
                 const data = await crearRolService(req);
+                if (data.status === "Forbidden") return handleLogOut();
                 if (data.ok === 200) {
                     await obtenerRoles();
                 }
@@ -129,6 +133,7 @@ export const useRoles = () => {
                 };
 
                 const data = await actualizarRol(req);
+                if (data.status === "Forbidden") return handleLogOut();
                 if (data.ok === 200) {
                     await obtenerRoles();
                 }

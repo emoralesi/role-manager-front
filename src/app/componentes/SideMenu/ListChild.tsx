@@ -10,7 +10,7 @@ export const ListChild = ({ doc }: { doc: SubMenu[] }) => {
             <List component='li' disablePadding>
                 {doc.map(subMenus => {
                     return (
-                        <Link  href={`/${subMenus.link_sub_menu}`} style={{ textDecoration: 'none' }} key={subMenus.id_sub_menu}>
+                        <Link  href={`/main/${subMenus.link_sub_menu}`} style={{ textDecoration: 'none' }} key={subMenus.id_sub_menu}>
                             <ListItemButton key={subMenus.id_sub_menu}>
                                 <ListItemIcon>
                                     <Icons idMenu={null} idSubMenu={subMenus.id_sub_menu} />
