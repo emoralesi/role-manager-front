@@ -1,31 +1,70 @@
-"use client";
+import { getUserLogged, UserLogged } from '@/utils/localStorage';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Box, IconButton } from '@mui/material';
+import Fade from '@mui/material/Fade';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 
-import React from "react";
-import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+export default function Header() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [userStorage, setUserStorage] = useState<string>('')
+  const open = Boolean(anchorEl);
 
-interface HeaderProps {
-  onMenuClick: () => void;
-}
+  const navigate = useRouter();
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+  useEffect(() => {
+    const userLogged: UserLogged | null = getUserLogged();
+    setUserStorage(userLogged?.nombreUsuario || 'Invitado');
+  }, [])
+
+  const handleLogOut = async () => {
+    await localStorage.removeItem('UserLogged');
+    navigate.push('/login')
+  };
+
+  const handleClick = (event: any) => {
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
   return (
-    <AppBar position="fixed" sx={{ zIndex: 1201 }}>
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          edge="start"
-          onClick={onMenuClick}
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Mi Aplicación
-        </Typography>
-      </Toolbar>
-    </AppBar>
-  );
-};
+    <>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: '10px' }}>
+        <h3>{userStorage}</h3>
+        <Box>
+          <IconButton
+            sx={{ float: 'right', fontSize: '5px' }}
+            id="fade-button"
+            aria-controls={open ? 'fade-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}>
 
-export default Header;
+            <AccountCircleIcon sx={{ fontSize: '50px', color: 'white' }} />
+
+          </IconButton>
+
+        </Box>
+        <Menu
+          id="fade-menu"
+          MenuListProps={{
+            'aria-labelledby': 'fade-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Fade}
+        >
+          <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+        </Menu>
+      </div>
+    </>
+  );
+}

@@ -363,7 +363,6 @@ export default function AgregarCategoriaPage() {
                                 onChange={(e) => {
                                     const values = e.target.value as string[];
 
-                                    // Nuevos seleccionados
                                     const nuevos = values.filter(v => !selectFiltroCategoria.some(s => s.nombre_filtro_categoria === v));
 
                                     nuevos.forEach(v => {
@@ -374,7 +373,6 @@ export default function AgregarCategoriaPage() {
                                         }
                                     });
 
-                                    // Eliminados
                                     const eliminados = selectFiltroCategoria.filter(s => !values.includes(s.nombre_filtro_categoria));
                                     if (eliminados.length > 0) {
                                         setListaDataGrid(prev => prev.filter(v => !eliminados.some(e => e.nombre_filtro_categoria === v.nombre_filtro_categoria)));

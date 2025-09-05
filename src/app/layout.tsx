@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
-import SideMenu from "./componentes/SideMenu/SideMenu";
-import { Box, Paper } from "@mui/material";
 import { Providers } from "./componentes/SnackProvider";
+import ClientLayout from "./componentes/ClienteLayout";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,52 +11,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="es">
-      <Providers>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} style={{ margin: 0, padding: 0 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            height: "100vh",
-          }}
-        >
-          <Paper
-            elevation={3}
-            sx={{
-              width: { md: "200px", xs: "60px" },
-              height: "100vh",
-              borderRadius: 0,
-              overflowY: "auto",
-              paddingRight: "20px",
-            }}
-          >
-            <SideMenu />
-          </Paper>
-
-          <Box
-            sx={{
-              marginBottom: 0,
-              width: { xs: "calc(100% - 70px)", md: "calc(100% - 200px)" },
-              display: "flex",
-              flexDirection: "column",
-              height: "100vh",
-            }}
-          >
-            <Box>
-              <h1>Header</h1>
-            </Box>
-            <Box sx={{ flex: 1, overflowY: "auto" }}>
-              {children}
-            </Box>
-          </Box>
-        </Box>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable}`}
+        style={{ margin: 0, padding: 0 }}
+      >
+        <Providers>
+            <ClientLayout>{children}</ClientLayout>
+        </Providers>
       </body>
-      </Providers>
     </html>
   );
 }
