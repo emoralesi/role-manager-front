@@ -1,17 +1,15 @@
-// page.tsx
-
 import { verifySession } from "@/lib/auth";
-import { forbidden, unauthorized } from "next/navigation";
+import { unauthorized } from "next/navigation";
 import GestionarRolesClient from "./GestionarRolesClient";
+import Forbidden from "@/app/componentes/Forbidden";
 
 export default async function GestionarRolesPage() {
   const session = await verifySession();
 
-  console.log("mi session",session);
-  
-
   if (!session) unauthorized();
-  if (session.idRole !== 1) forbidden();
+  if (!session.accesSubMenu.includes(9)) {
+    return <Forbidden />;
+  }
 
   return <GestionarRolesClient />;
 }

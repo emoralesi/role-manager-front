@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
+// API route /api/session
 export async function GET() {
   const cookieValue = (await cookies()).get("session")?.value;
 
@@ -10,7 +11,13 @@ export async function GET() {
 
   try {
     const session = JSON.parse(cookieValue);
-    return NextResponse.json({ status: "ok", session });
+
+    const safeSession = {
+      id_usuario: session.id_usuario,
+      nombreUsuario: session.nombreUsuario
+    };
+
+    return NextResponse.json({ status: "ok", session: safeSession });
   } catch {
     return NextResponse.json({ status: "error" }, { status: 500 });
   }

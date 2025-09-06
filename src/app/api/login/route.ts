@@ -20,6 +20,7 @@ export async function POST(req: Request) {
             id_usuario: data.id_usuario,
             nombreUsuario: data.nombreUsuario,
             idRole: data.idRole,
+            accesSubMenu: data.accesSubMenu,
             token: data.token
         }), {
             httpOnly: true,

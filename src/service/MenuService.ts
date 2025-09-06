@@ -28,10 +28,6 @@ export default async function getMenuYSubMenu(): Promise<ServiceResponse<Menu[]>
       requestOptions
     );
 
-    if (!response.ok) {
-      throw new Error("Error al obtener menú");
-    }
-
     const data = await response.json();
     return data;
   } catch (error) {

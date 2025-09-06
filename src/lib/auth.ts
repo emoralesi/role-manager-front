@@ -4,6 +4,7 @@ export type Session = {
   id_usuario: string;
   nombreUsuario: string;
   idRole: number;
+  accesSubMenu: number[];
   token: string;
 } | null;
 

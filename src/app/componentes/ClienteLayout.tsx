@@ -19,7 +19,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           width: { md: "200px", xs: "60px" },
           height: "100vh",
           borderRadius: 0,
-          overflowY: "auto",
+          overflowY: 'auto',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
           paddingRight: "20px",
         }}
       >

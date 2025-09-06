@@ -11,20 +11,21 @@ import ShopTwoIcon from '@mui/icons-material/ShopTwo';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { Group, Inventory, Security, Storefront } from '@mui/icons-material';
 
 const Icons = ({ idMenu, idSubMenu }: { idMenu: number | null, idSubMenu: number | null }) => {
     if (idMenu) {
         switch (idMenu) {
             case 1:
-                return <ShopTwoIcon />
+                return <Storefront />
             case 2:
                 return <CategoryIcon />
             case 3:
-                return <InventoryIcon />
+                return <Group />
             case 4:
-                return <AssignmentIndIcon />
+                return <Inventory />
             default:
-                return <QuestionMarkIcon />
+                return <Security />
         }
     } else {
         switch (idSubMenu) {
