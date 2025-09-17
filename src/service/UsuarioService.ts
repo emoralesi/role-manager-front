@@ -1,6 +1,7 @@
 'use server'
 import { ServiceResponse } from "@/types/ServiceResponse";
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario: string, password: string }): Promise<any> {
 
@@ -21,7 +22,7 @@ export async function LoginUsuario({ nombreUsuario, password }: { nombreUsuario:
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/loginUser`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/loginUser`, requestOptions);
 
         const data = await response.json();
 
@@ -57,7 +58,7 @@ export async function RegisterUsuario({ nombreUsuario, password, role }: { nombr
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/registerUser`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/registerUser`, requestOptions);
 
         const data = await response.json();
 
@@ -77,7 +78,7 @@ export async function getUsuarios(): Promise<ServiceResponse<Usuario[]>> {
         if (!cookieValue) throw new Error("Usuario no logueado");
         const session = JSON.parse(cookieValue);
 
-        const response = await fetch(`http://localhost:3500/service/obtenerUsuarios`, {
+        const response = await fetch(`${process.env.URL_BACKEND}service/obtenerUsuarios`, {
             method: "GET",
             headers: {
                 "tu_clave_secreta_jwt": session.token,
@@ -118,7 +119,7 @@ export async function UpdateEstadoUsuario({ id_usuario, activo }: { id_usuario: 
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/actualizarUsuarioEstado`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/actualizarUsuarioEstado`, requestOptions);
 
         const data = await response.json();
 
@@ -154,7 +155,7 @@ export async function UpdateUsuario({ id_usuario, nombre_usuario, role }: { id_u
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/actualizarUsuario`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/actualizarUsuario`, requestOptions);
 
         const data = await response.json();
 
@@ -186,7 +187,7 @@ export async function UpdatePasswordUsuario({ id_usuario, newPassword }: { id_us
             },
             body: JSON.stringify(req)
         };
-        const response = await fetch(`http://localhost:3500/service/actualizarPasswordUsuario`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/actualizarPasswordUsuario`, requestOptions);
         const data = await response.json();
         return data
     } catch (error) {

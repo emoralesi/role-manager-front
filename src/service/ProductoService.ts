@@ -1,5 +1,6 @@
 'use server'
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function insertarProducto({
     nombreProducto,
@@ -34,7 +35,7 @@ export async function insertarProducto({
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/agregarProducto`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/agregarProducto`, requestOptions);
 
         const data = await response.json();
 
@@ -63,7 +64,7 @@ export async function getProductos(): Promise<any> {
             },
         };
 
-        const resultado = await fetch('http://localhost:3500/service/obtenerProducto', requestOptions);
+        const resultado = await fetch('${process.env.URL_BACKEND}service/obtenerProducto', requestOptions);
 
         const data = await resultado.json();
 
@@ -99,7 +100,7 @@ export async function updateIsActive({ id_producto, isactive }: { id_producto: n
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/actualizarEstado`, requestOptions)
+        const response = await fetch(`${process.env.URL_BACKEND}service/actualizarEstado`, requestOptions)
 
         const data = await response.json();
 
@@ -136,7 +137,7 @@ export async function AgregarStock({ sku, stock }: { sku: string, stock: number 
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/agregarStock`,
+        const response = await fetch(`${process.env.URL_BACKEND}service/agregarStock`,
             requestOptions
         );
 
@@ -185,8 +186,8 @@ export async function UpdateProducto({
             body: JSON.stringify(req)
 
         };
-        console.log("este es my requestOption", requestOptions);
-        const response = await fetch(`http://localhost:3500/service/actualizarProducto`, requestOptions);
+
+        const response = await fetch(`${process.env.URL_BACKEND}service/actualizarProducto`, requestOptions);
 
         const data = await response.json();
 

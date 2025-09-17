@@ -2,6 +2,7 @@
 import { Categoria, CategoriaPlano, InsertarCategoriasParams } from "@/types/Categoria";
 import { ServiceResponse } from "@/types/ServiceResponse";
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function getCategorias(): Promise<ServiceResponse<Categoria[]>> {
   try {
@@ -9,7 +10,7 @@ export async function getCategorias(): Promise<ServiceResponse<Categoria[]>> {
     if (!cookieValue) throw new Error("Usuario no logueado");
     const session = JSON.parse(cookieValue);
 
-    const response = await fetch(`http://localhost:3500/service/obtenerCategoria`, {
+    const response = await fetch(`${process.env.URL_BACKEND}service/obtenerCategoria`, {
       method: "GET",
       headers: {
         "tu_clave_secreta_jwt": session.token,
@@ -30,7 +31,7 @@ export async function getTodoCategorias(): Promise<ServiceResponse<CategoriaPlan
     if (!cookieValue) throw new Error("Usuario no logueado");
     const session = JSON.parse(cookieValue);
 
-    const response = await fetch(`http://localhost:3500/service/obtenerTodoCategorias`, {
+    const response = await fetch(`${process.env.URL_BACKEND}service/obtenerTodoCategorias`, {
       method: "GET",
       headers: {
         "tu_clave_secreta_jwt": session.token,
@@ -59,7 +60,7 @@ export async function insertarCategorias(params: InsertarCategoriasParams): Prom
       },
       body: JSON.stringify(params),
     };
-    const response = await fetch(`http://localhost:3500/service/AgregarCategoriaYFiltro`, requestOptions);
+    const response = await fetch(`${process.env.URL_BACKEND}service/AgregarCategoriaYFiltro`, requestOptions);
     const data = await response.json();
     return data;
   } catch (error) {

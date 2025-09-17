@@ -2,6 +2,7 @@
 import { Menu } from "@/types/Menu";
 import { ServiceResponse } from "@/types/ServiceResponse";
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export default async function getMenuYSubMenu(): Promise<ServiceResponse<Menu[]>> {
   try {
@@ -24,7 +25,7 @@ export default async function getMenuYSubMenu(): Promise<ServiceResponse<Menu[]>
     };
 
     const response = await fetch(
-      "http://localhost:3500/service/obtenerMenuItems",
+      `${process.env.URL_BACKEND}service/obtenerMenuItems`,
       requestOptions
     );
 

@@ -16,7 +16,6 @@ export const useMenu = () => {
     const obtenerMenuYSubMenu = async () => {
         try {
             const data = await getMenuYSubMenu();
-            console.log("mi data menu", data);
 
             if (data.status === "Forbidden") return handleLogOut();
 

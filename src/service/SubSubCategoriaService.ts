@@ -1,5 +1,6 @@
 'use server'
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function getSubSubCategorias({ id_sub_categoria }: { id_sub_categoria: number }): Promise<any> {
 
@@ -25,7 +26,7 @@ export async function getSubSubCategorias({ id_sub_categoria }: { id_sub_categor
 
         };
 
-        const response = await fetch(`http://localhost:3500/service/obtenerSubSubCategoria`, requestOptions);
+        const response = await fetch(`${process.env.URL_BACKEND}service/obtenerSubSubCategoria`, requestOptions);
 
         const data = await response.json();
 

@@ -1,6 +1,7 @@
 'use server'
 import { ServiceResponse } from "@/types/ServiceResponse";
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function getTipoFiltroCategoria(): Promise<ServiceResponse<TipoFiltro[]>> {
 
@@ -10,7 +11,7 @@ export async function getTipoFiltroCategoria(): Promise<ServiceResponse<TipoFilt
         if (!cookieValue) throw new Error("Usuario no logueado");
         const session = JSON.parse(cookieValue);
 
-        const response = await fetch(`http://localhost:3500/service/obtenerTipoFiltroCategoria`, {
+        const response = await fetch(`${process.env.URL_BACKEND}service/obtenerTipoFiltroCategoria`, {
             method: "GET",
             headers: {
                 "tu_clave_secreta_jwt": session.token,

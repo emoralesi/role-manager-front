@@ -1,6 +1,7 @@
 'use server'
 import { ServiceResponse } from "@/types/ServiceResponse";
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 export async function getFiltroCategorias(): Promise<any> {
 
@@ -10,7 +11,7 @@ export async function getFiltroCategorias(): Promise<any> {
         if (!cookieValue) throw new Error("Usuario no logueado");
         const session = JSON.parse(cookieValue);
 
-        const response = await fetch(`http://localhost:3500/service/obtenerFiltroCategoria`, {
+        const response = await fetch(`${process.env.URL_BACKEND}service/obtenerFiltroCategoria`, {
             method: "GET",
             headers: {
                 "tu_clave_secreta_jwt": session.token,
@@ -52,7 +53,7 @@ export async function getFiltroCategoriasBySubSubCategoria(
         };
 
         const response = await fetch(
-            "http://localhost:3500/service/obtenerFiltroCategoriaBySubSubCategoria",
+            `${process.env.URL_BACKEND}service/obtenerFiltroCategoriaBySubSubCategoria`,
             requestOptions
         );
 

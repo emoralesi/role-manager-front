@@ -1,5 +1,6 @@
 'use server'
 import { cookies } from "next/headers";
+import '../../envConfig.ts'
 
 
 export async function crearRolService({
@@ -27,7 +28,7 @@ export async function crearRolService({
     };
 
     const response = await fetch(
-      `http://localhost:3500/service/crearRol`,
+      `${process.env.URL_BACKEND}service/crearRol`,
       requestOptions
     );
     const data = await response.json();
@@ -53,7 +54,7 @@ export async function getRoles(): Promise<any> {
     };
 
     const response = await fetch(
-      `http://localhost:3500/service/obtenerRoles`,
+      `${process.env.URL_BACKEND}service/obtenerRoles`,
       requestOptions
     );
     const data = await response.json();
@@ -79,7 +80,7 @@ export async function getRolesConMenus(): Promise<any> {
     };
 
     const response = await fetch(
-      `http://localhost:3500/service/obtenerRolesConMenus`,
+      `${process.env.URL_BACKEND}service/obtenerRolesConMenus`,
       requestOptions
     );
     const data = await response.json();
@@ -117,7 +118,7 @@ export async function actualizarRol({
     };
 
     const response = await fetch(
-      `http://localhost:3500/service/actualizarRol`,
+      `${process.env.URL_BACKEND}service/actualizarRol`,
       requestOptions
     );
     const data = await response.json();
