@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 import { Providers } from "./componentes/SnackProvider";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "Role Manager App",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${geistSans.variable} ${geistMono.variable}`}
         style={{ margin: 0, padding: 0 }}
       >
+        <Analytics />
         <Providers>{children}</Providers>
       </body>
     </html>
